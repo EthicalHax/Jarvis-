@@ -1,0 +1,160 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS - Virtual Assistant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section class="main">
+        <h1>J A R V I S</h1>
+        <p>I am a Virtual Assistant JARVIS, How may I help you?</p>
+        <div class="input">
+            <input type="text" id="userInput" placeholder="Type your command here..." />
+            <button id="submit">Submit</button>
+        </div>
+        <h1 class="content">Awaiting your command...</h1>
+    </section>
+    <script src="app.js"></script>
+</body>
+</html>
+<style>body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #121212;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.main {
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #bbb;
+    margin-bottom: 20px;
+}
+
+.input {
+    margin-top: 30px;
+}
+
+.input input {
+    width: 70%;
+    padding: 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.input button {
+    background-color: #1db954;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.input button:hover {
+    background-color: #1ed760;
+}
+
+.content {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #bbb;
+}
+</style><script>document.addEventListener('DOMContentLoaded', () => {
+    const submitButton = document.querySelector('#submit');
+    const userInput = document.querySelector('#userInput');
+    const content = document.querySelector('.content');
+
+    // Event listener for the submit button
+    submitButton.addEventListener('click', () => {
+        const input = userInput.value.trim().toLowerCase(); // Get user input
+        if (input) {
+            content.textContent = `You said: ${input}`; // Display user input
+            respondToCommand(input); // Process and respond to input
+            userInput.value = ''; // Clear the input field
+        } else {
+            content.textContent = 'Please enter a command.';
+            speak('Please enter a command.');
+        }
+    });
+
+    // Function to handle user commands
+    function respondToCommand(message) {
+        const responses = {
+            'hello': 'Hello! How can I assist you today?',
+            'open google': 'Opening Google.',
+            'open youtube': 'Opening YouTube.',
+            'what is the time': `The time is ${get12HourTime()}.`,
+            'what is the date': `Today's date is ${new Date().toLocaleDateString()}.`,
+            'open instagram': 'Opening Instagram.',
+            'open facebook': 'Opening Facebook.',
+            'open any social media platform': 'Opening a social media platform.',
+            'open calculator': 'Opening the Calculator.',
+            'open chatgpt': 'Opening ChatGPT.'
+        };
+
+        // Get response based on user input or default response
+        const reply = responses[message] || "I didn't understand that.";
+        content.textContent = reply; // Display the response
+        speak(reply); // Speak the response
+
+        // Open external links for specific commands
+        if (message === 'open google') window.open('https://www.google.com', '_blank');
+        if (message === 'open youtube') window.open('https://www.youtube.com', '_blank');
+        if (message === 'open instagram') window.open('https://www.instagram.com', '_blank');
+        if (message === 'open facebook') window.open('https://www.facebook.com', '_blank');
+        if (message === 'open any social media platform') {
+            // Opens a general social media platform, you can customize this
+            window.open('https://www.instagram.com', '_blank'); // Example: Opens Instagram
+        }
+        if (message === 'open calculator') {
+            openCalculator(); // Call function to open calculator
+        }
+        if (message === 'open chatgpt') {
+            window.open('https://chat.openai.com', '_blank'); // Opens ChatGPT
+        }
+    }
+
+    // Function to get the current time in 12-hour format with AM/PM
+    function get12HourTime() {
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12; // Convert 0 to 12 for midnight
+        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero to minutes
+        return `${hours}:${formattedMinutes} ${ampm}`;
+    }
+
+    // Function to convert text to speech
+    function speak(text) {
+        const synth = window.speechSynthesis; // Get the speech synthesis object
+        const utterance = new SpeechSynthesisUtterance(text); // Create an utterance
+        utterance.lang = 'en-US'; // Set language
+        utterance.rate = 1; // Set speaking rate (1 is normal)
+        synth.speak(utterance); // Speak the text
+    }
+
+    // Function to open the calculator link
+    function openCalculator() {
+        window.open('https://calculator.apps.chrome/', '_blank'); // Opens the calculator link
+    }
+});
+</script>
